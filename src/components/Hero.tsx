@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Play, MapPin, Camera } from "lucide-react";
-import konarkTemple from "@/assets/konark-temple.jpg";
-import jagannathTemple from "@/assets/jagannath-temple.jpg";
-import chilikaLake from "@/assets/chilika-lake.jpg";
 
 const monuments = [
-  { image: konarkTemple, name: "Konark Sun Temple" },
-  { image: jagannathTemple, name: "Jagannath Puri Temple" },
-  { image: chilikaLake, name: "Chilika Lake" }
+  { image: "/images/konark-temple.jpg", name: "Konark Sun Temple" },
+  { image: "/images/jagannath-temple.jpg", name: "Jagannath Puri Temple" },
+  { image: "/images/chilika-lake.jpg", name: "Chilika Lake" }
 ];
 
 export const Hero = () => {

@@ -3,9 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Eye, Heart, Star } from "lucide-react";
-import pattachitraArt from "@/assets/pattachitra-art.jpg";
-import silverFiligree from "@/assets/silver-filigree.jpg";
-import stoneCarving from "@/assets/stone-carving.jpg";
 
 const artisanWorks = [
   {
@@ -13,7 +10,7 @@ const artisanWorks = [
     title: "Traditional Pattachitra Painting",
     artist: "Raghurajpur Artisan Collective",
     description: "Hand-painted on cloth depicting Lord Krishna's divine leelas with natural pigments and traditional techniques passed down through generations.",
-    image: pattachitraArt,
+    image: "/images/pattachitra-art.jpg",
     price: "₹2,500",
     rating: 4.9,
     category: "Painting",
@@ -25,7 +22,7 @@ const artisanWorks = [
     title: "Silver Filigree Jewelry Set",
     artist: "Cuttack Master Craftsmen",
     description: "Intricate silver filigree work showcasing the delicate artistry of Cuttack's renowned metalwork tradition.",
-    image: silverFiligree,
+    image: "/images/silver-filigree.jpg",
     price: "₹8,900",
     rating: 4.8,
     category: "Jewelry",
@@ -37,7 +34,7 @@ const artisanWorks = [
     title: "Temple Stone Sculpture",
     artist: "Konark Stone Carvers Guild",
     description: "Hand-carved stone sculpture inspired by Konark temple architecture, featuring intricate traditional motifs.",
-    image: stoneCarving,
+    image: "/images/stone-carving.jpg",
     price: "₹15,000",
     rating: 5.0,
     category: "Sculpture",

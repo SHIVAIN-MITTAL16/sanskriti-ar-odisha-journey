@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Maximize, Volume2, VolumeX, Award, Globe } from "lucide-react";
-import konarkTemple from "@/assets/konark-temple.jpg";
 
 const languages = ["English", "Hindi", "Odia"];
 const quizQuestions = [
@@ -68,7 +67,7 @@ export const ARExperience = () => {
             <Card className="bg-gradient-card border-border/20 shadow-card overflow-hidden hover-lift">
               <div className="relative aspect-video bg-black/50 rounded-t-lg overflow-hidden">
                 <img 
-                  src={konarkTemple} 
+                  src="/images/konark-temple.jpg" 
                   alt="AR Monument View"
                   className="w-full h-full object-cover"
                   style={{
