@@ -59,56 +59,37 @@ const SouvenirGenerator = () => {
     setLoading(true);
     setShowResult(false);
 
-    const prompt = `A beautiful artistic portrait of ${userDetails.fullName} (age ${userDetails.age}), standing in front of the majestic Konark Sun Temple, Odisha, heritage style, golden sunset lighting, cinematic digital painting, ancient Indian architecture, warm golden hour, professional portrait photography`;
-
     try {
-      let response;
+      // Prepare form data for webhook
+      const formData = new FormData();
+      formData.append("fullName", userDetails.fullName);
+      formData.append("age", userDetails.age);
+      formData.append("email", userDetails.email);
+      formData.append("phone", userDetails.phone);
       
       if (userDetails.photo) {
-        // Use image-to-image with uploaded photo
-        const formData = new FormData();
-        formData.append("inputs", userDetails.photo);
-        formData.append("parameters", JSON.stringify({ prompt }));
-
-        response = await fetch(
-          "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-Kontext-dev",
-          {
-            method: "POST",
-            headers: { Authorization: `Bearer ${HF_TOKEN}` },
-            body: formData,
-          }
-        );
-      } else {
-        // Use text-to-image as fallback
-        response = await fetch(
-          "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${HF_TOKEN}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              inputs: prompt,
-              parameters: {
-                guidance_scale: 7.5,
-                num_inference_steps: 50,
-              },
-            }),
-          }
-        );
+        formData.append("photo", userDetails.photo);
       }
+
+      // Send data to webhook
+      const response = await fetch(
+        "https://rudra-narayan16.app.n8n.cloud/webhook-test/0f43a0cf-30a1-4224-8404-7321a95e510a",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
-        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+        throw new Error(`Webhook Error: ${response.status} ${response.statusText}`);
       }
 
-      const blob = await response.blob();
-      setGeneratedImage(URL.createObjectURL(blob));
+      // For demo purposes, create a mock result
+      setGeneratedImage("https://via.placeholder.com/512x512/f59e0b/ffffff?text=Heritage+Souvenir+Generated");
       setShowResult(true);
-      toast.success("✨ Your heritage souvenir has been crafted!");
+      toast.success("✨ Your heritage souvenir data has been sent successfully!");
     } catch (err) {
-      console.error("Generation error:", err);
+      console.error("Webhook error:", err);
       toast.error("❌ Oops! Something went wrong. Try again later.");
     } finally {
       setLoading(false);
