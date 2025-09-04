@@ -3,6 +3,7 @@ import { KonarkTempleSection } from "@/components/KonarkTempleSection";
 import { ARExperience } from "@/components/ARExperience";
 import { ArtisansSection } from "@/components/ArtisansSection";
 import { RewardsSection } from "@/components/RewardsSection";
+import SouvenirGenerator from "@/components/SouvenirGenerator";
 import { Footer } from "@/components/Footer";
 
 const Index = () => {
@@ -13,6 +14,7 @@ const Index = () => {
       <ARExperience />
       <ArtisansSection />
       <RewardsSection />
+      <SouvenirGenerator />
       <Footer />
     </div>
   );
