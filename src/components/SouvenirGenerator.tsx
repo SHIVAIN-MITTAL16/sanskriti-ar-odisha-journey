@@ -50,27 +50,6 @@ const SouvenirGenerator = () => {
     toast.success("Photo uploaded successfully!");
   };
 
-  const convertImageToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-      
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx?.drawImage(img, 0, 0);
-        
-        // Convert to base64 PNG
-        const base64 = canvas.toDataURL('image/png');
-        resolve(base64);
-      };
-      
-      img.onerror = reject;
-      img.src = URL.createObjectURL(file);
-    });
-  };
-
   const generateSouvenir = async () => {
     if (!userDetails.fullName || !userDetails.age) {
       toast.error("Please fill in your name and age");
@@ -81,7 +60,6 @@ const SouvenirGenerator = () => {
     setShowResult(false);
 
     try {
-      // Prepare JSON payload
       const payload: any = {
         status: "success",
         user_name: userDetails.fullName,
@@ -91,12 +69,24 @@ const SouvenirGenerator = () => {
       };
       
       if (userDetails.photo) {
-        const photoBase64 = await convertImageToBase64(userDetails.photo);
-        payload.photo_base64 = photoBase64;
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        
+        await new Promise((resolve, reject) => {
+          img.onload = () => {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx?.drawImage(img, 0, 0);
+            payload.photo_base64 = canvas.toDataURL('image/png');
+            resolve(void 0);
+          };
+          img.onerror = reject;
+          img.src = URL.createObjectURL(userDetails.photo);
+        });
       }
 
-      // Send data to webhook
-      const response = await fetch(
+      await fetch(
         "https://rudra-narayan16.app.n8n.cloud/webhook-test/0f43a0cf-30a1-4224-8404-7321a95e510a",
         {
           method: "POST",
@@ -107,11 +97,6 @@ const SouvenirGenerator = () => {
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`Webhook Error: ${response.status} ${response.statusText}`);
-      }
-
-      // For demo purposes, create a mock result
       setGeneratedImage("https://via.placeholder.com/512x512/f59e0b/ffffff?text=Heritage+Souvenir+Generated");
       setShowResult(true);
       toast.success("✨ Your heritage souvenir data has been sent successfully!");
