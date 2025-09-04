@@ -50,6 +50,27 @@ const SouvenirGenerator = () => {
     toast.success("Photo uploaded successfully!");
   };
 
+  const convertImageToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx?.drawImage(img, 0, 0);
+        
+        // Convert to base64 PNG
+        const base64 = canvas.toDataURL('image/png');
+        resolve(base64);
+      };
+      
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
   const generateSouvenir = async () => {
     if (!userDetails.fullName || !userDetails.age) {
       toast.error("Please fill in your name and age");
@@ -60,15 +81,18 @@ const SouvenirGenerator = () => {
     setShowResult(false);
 
     try {
-      // Prepare form data for webhook
-      const formData = new FormData();
-      formData.append("fullName", userDetails.fullName);
-      formData.append("age", userDetails.age);
-      formData.append("email", userDetails.email);
-      formData.append("phone", userDetails.phone);
+      // Prepare JSON payload
+      const payload: any = {
+        status: "success",
+        user_name: userDetails.fullName,
+        age: parseInt(userDetails.age),
+        email: userDetails.email,
+        phone: userDetails.phone,
+      };
       
       if (userDetails.photo) {
-        formData.append("photo", userDetails.photo);
+        const photoBase64 = await convertImageToBase64(userDetails.photo);
+        payload.photo_base64 = photoBase64;
       }
 
       // Send data to webhook
@@ -76,7 +100,10 @@ const SouvenirGenerator = () => {
         "https://rudra-narayan16.app.n8n.cloud/webhook-test/0f43a0cf-30a1-4224-8404-7321a95e510a",
         {
           method: "POST",
-          body: formData,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
         }
       );
 
