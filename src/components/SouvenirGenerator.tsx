@@ -69,6 +69,7 @@ const SouvenirGenerator = () => {
       };
       
       if (userDetails.photo) {
+        console.log("Converting image to base64...");
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         const img = new Image();
@@ -79,6 +80,7 @@ const SouvenirGenerator = () => {
             canvas.height = img.height;
             ctx?.drawImage(img, 0, 0);
             payload.photo_base64 = canvas.toDataURL('image/png');
+            console.log("Image converted to base64, size:", payload.photo_base64.length);
             resolve(void 0);
           };
           img.onerror = reject;
@@ -86,7 +88,9 @@ const SouvenirGenerator = () => {
         });
       }
 
-      await fetch(
+      console.log("Sending payload to webhook:", payload);
+      
+      const response = await fetch(
         "https://rudra-narayan16.app.n8n.cloud/webhook-test/0f43a0cf-30a1-4224-8404-7321a95e510a",
         {
           method: "POST",
@@ -96,6 +100,15 @@ const SouvenirGenerator = () => {
           body: JSON.stringify(payload),
         }
       );
+
+      console.log("Webhook response status:", response.status);
+      
+      if (!response.ok) {
+        throw new Error(`Webhook Error: ${response.status} ${response.statusText}`);
+      }
+
+      const responseData = await response.json();
+      console.log("Webhook response data:", responseData);
 
       setGeneratedImage("https://via.placeholder.com/512x512/f59e0b/ffffff?text=Heritage+Souvenir+Generated");
       setShowResult(true);
