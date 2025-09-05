@@ -113,7 +113,12 @@ const SouvenirGenerator = () => {
       const responseData = await response.json();
       console.log("Webhook response data:", responseData);
 
-      setGeneratedImage("https://via.placeholder.com/512x512/f59e0b/ffffff?text=Heritage+Souvenir+Generated");
+      // Use the image_url from the webhook response
+      if (responseData.image_url) {
+        setGeneratedImage(responseData.image_url);
+      } else {
+        throw new Error("No image_url received from webhook");
+      }
       setShowResult(true);
       toast.success("✨ Your heritage souvenir data has been sent successfully!");
     } catch (err) {
