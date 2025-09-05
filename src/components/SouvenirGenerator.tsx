@@ -106,27 +106,16 @@ const SouvenirGenerator = () => {
     setShowResult(false);
 
     try {
-      console.log("Preparing form data for webhook...");
+      console.log("Preparing JSON data for webhook...");
       
-      // Use FormData instead of JSON since webhook might expect multipart/form-data
-      const formData = new FormData();
-      formData.append("status", "success");
-      formData.append("user_name", userDetails.fullName);
-      formData.append("age", userDetails.age);
-      formData.append("email", userDetails.email);
-      formData.append("phone", userDetails.phone);
-      formData.append("style", userDetails.style);
-      formData.append("monument", userDetails.monument);
-      formData.append("include_logo", userDetails.includeLogo.toString());
-      formData.append("ai_prompt", generatedPrompt);
-      
+      let photoBase64 = "";
       if (userDetails.photo) {
         console.log("Converting image to base64...");
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         const img = new Image();
         
-        const photoBase64 = await new Promise<string>((resolve, reject) => {
+        photoBase64 = await new Promise<string>((resolve, reject) => {
           img.onload = () => {
             canvas.width = img.width;
             canvas.height = img.height;
@@ -138,17 +127,29 @@ const SouvenirGenerator = () => {
           img.onerror = reject;
           img.src = URL.createObjectURL(userDetails.photo);
         });
-        
-        formData.append("photo_base64", photoBase64);
       }
 
-      console.log("Sending FormData to webhook...");
+      const payload = {
+        name: userDetails.fullName,
+        age: parseInt(userDetails.age),
+        email: userDetails.email,
+        phone: userDetails.phone,
+        photo_base64: photoBase64,
+        style: userDetails.style,
+        monument: userDetails.monument,
+        include_logo: userDetails.includeLogo
+      };
+
+      console.log("Sending JSON to webhook...");
       
       const response = await fetch(
-        "https://rudra-narayan16.app.n8n.cloud/webhook-test/0f43a0cf-30a1-4224-8404-7321a95e510a",
+        "https://rudra-narayan16.app.n8n.cloud/webhook-test/ec5985e8-546d-41ea-8a70-70e913e9cb78",
         {
           method: "POST",
-          body: formData, // Send as FormData, not JSON
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
         }
       );
 
