@@ -97,11 +97,16 @@ const SouvenirGenerator = () => {
   };
 
   const generateSouvenir = async () => {
+    console.log("=== Generate Souvenir Started ===");
+    console.log("User details:", userDetails);
+    
     if (!userDetails.fullName || !userDetails.age) {
+      console.log("Missing required fields - name or age");
       toast.error("Please fill in your name and age");
       return;
     }
 
+    console.log("Starting generation process...");
     setLoading(true);
     setShowResult(false);
 
@@ -174,12 +179,17 @@ const SouvenirGenerator = () => {
       } else {
         throw new Error("Unexpected response from webhook");
       }
+      console.log("Generation completed successfully!");
       setShowResult(true);
       toast.success("✨ Your heritage souvenir data has been sent successfully!");
     } catch (err) {
-      console.error("Webhook error:", err);
+      console.error("=== WEBHOOK ERROR ===");
+      console.error("Error details:", err);
+      console.error("Error message:", err instanceof Error ? err.message : 'Unknown error');
+      console.error("========================");
       toast.error("❌ Oops! Something went wrong. Try again later.");
     } finally {
+      console.log("=== Generate Souvenir Finished ===");
       setLoading(false);
     }
   };
