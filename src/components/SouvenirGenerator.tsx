@@ -113,11 +113,15 @@ const SouvenirGenerator = () => {
       const responseData = await response.json();
       console.log("Webhook response data:", responseData);
 
-      // Use the image_url from the webhook response
+      // Handle the case where webhook just confirms workflow started
       if (responseData.image_url) {
         setGeneratedImage(responseData.image_url);
+      } else if (responseData.message === "Workflow was started") {
+        // Use a placeholder for now since webhook is asynchronous
+        setGeneratedImage("https://via.placeholder.com/512x512/f59e0b/ffffff?text=Heritage+Souvenir+Generated");
+        console.log("Workflow started - using placeholder image");
       } else {
-        throw new Error("No image_url received from webhook");
+        throw new Error("Unexpected response from webhook");
       }
       setShowResult(true);
       toast.success("✨ Your heritage souvenir data has been sent successfully!");
