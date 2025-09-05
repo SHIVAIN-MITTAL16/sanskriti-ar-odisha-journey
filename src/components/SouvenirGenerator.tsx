@@ -20,6 +20,7 @@ interface UserDetails {
 }
 
 const SouvenirGenerator = () => {
+  console.log("SouvenirGenerator component is rendering...");
   const [userDetails, setUserDetails] = useState<UserDetails>({
     fullName: "",
     age: "",
