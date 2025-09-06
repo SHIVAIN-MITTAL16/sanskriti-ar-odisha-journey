@@ -6,6 +6,16 @@ import { RewardsSection } from "@/components/RewardsSection";
 import SouvenirGenerator from "@/components/SouvenirGenerator";
 import { Footer } from "@/components/Footer";
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'elevenlabs-convai': {
+        'agent-id': string;
+      };
+    }
+  }
+}
+
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
@@ -16,6 +26,7 @@ const Index = () => {
       <RewardsSection />
       <SouvenirGenerator />
       <Footer />
+      <elevenlabs-convai agent-id="agent_7601k4etqsezf0dtwehskzky3b91"></elevenlabs-convai>
     </div>
   );
 };
